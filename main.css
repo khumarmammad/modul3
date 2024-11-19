@@ -19,7 +19,7 @@ main {
     flex-direction: column;
     justify-content: space-between;
     background-color: white;
-    margin: 56px 0;
+    margin: 80px 0;
     width: 50%;
 }
 body {
@@ -27,7 +27,7 @@ body {
 }
 header {
     display: flex;
-    height: 50px;
+    height: 60px;
     align-items: center;
     justify-content: space-around;
     background-color: #F5F5F6;
@@ -166,4 +166,175 @@ input {
     line-height: 14px;
     letter-spacing: 0em;
     text-align: left;
+}
+.input input:focus {
+    outline: none;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.rate {
+    color: #C6C6C6;
+    margin-bottom: 10px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 14px;
+    letter-spacing: 0em;
+    text-align: left;
+}
+.rate2 {
+    color: #C6C6C6;
+    margin-bottom: 10px;
+    font-size: 12px;
+    text-align: left;
+    font-weight: 400;
+    line-height: 14px;
+    letter-spacing: 0em;
+}
+@media (max-width: 768px) {
+    header {
+        justify-content: space-between;
+        padding: 0 15px;
+    }
+    .menu {
+        display: none;
+        flex-direction: column;
+        position: fixed;
+        top: 70px;
+        right: 15px;
+        background-color: #FFFFFF;
+        width: 250px;
+        border: 1px solid #E5E5E5;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 10px;
+        z-index: 10;
+        border-radius: 8px;
+    }
+    .menu.active {
+        display: flex;
+    }
+    .menu p {
+        padding: 10px 20px;
+        text-align: left;
+        color: #959BA4;
+        font-size: 14px;
+        border-bottom: 1px solid #E5E5E5;
+    }
+    .menu p:last-child {
+        border-bottom: none;
+    }
+    .burger {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+    }
+    .burger span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: #833AE0;
+        margin: 4px 0;
+        transition: 0.3s;
+    }
+    .burger.active span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+    }
+    .burger.active span:nth-child(2) {
+        opacity: 0;
+    }
+    .burger.active span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+    }
+    .signin {
+        display: none;
+    }
+    .container {
+        width: 90%;
+        margin: 20px 0;
+    }
+    .converters {
+        flex-direction: column;
+        align-items: center;
+    }
+    .converter {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+    header {
+        justify-content: space-between;
+        padding: 0 20px;
+    }
+    .burger {
+        display: none; 
+    }
+    .menu {
+        display: flex;
+        flex-direction: row;
+        position: static;
+        background-color: transparent;
+        width: auto;
+        box-shadow: none;
+        border: none;
+        padding: 0;
+    }
+    .menu p {
+        padding: 0 10px;
+        font-size: 14px;
+        color: #959BA4;
+        border: none;
+    }
+    .menu p:hover {
+        cursor: pointer;
+    }
+    .signin {
+        display: inline-block;
+        width: auto;
+        height: 40px;
+        padding: 0 15px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+    main {
+        margin-top: 30px;
+    }
+    .container {
+        width: 70%; 
+        margin: 40px 0;
+    }
+    .converters {
+        display: flex;
+        flex-direction: row; 
+        justify-content: space-between;
+        gap: 20px;
+    }
+    .converter {
+        width: 48%; 
+    }
+    .currency1 button,
+    .currency2 button {
+        font-size: 14px;
+        width: 25%; 
+    }
+    .input {
+        height: 120px;
+        padding: 15px;
+    }
+    input {
+        font-size: 28px;
+    }
+    .input p {
+        font-size: 12px;
+    }
+    .rate,
+    .rate2 {
+        font-size: 12px;
+    }
 }
