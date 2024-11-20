@@ -23,16 +23,13 @@ cur2.forEach(function (button) {
 const burger = document.querySelector('.burger');
 const menu = document.querySelector('.menu');
 burger.addEventListener('click', () => {
-    burger.classList.toggle('active');
     menu.classList.toggle('active');
 });
 document.addEventListener('click', (e) => {
     if (!menu.contains(e.target) && !burger.contains(e.target)) {
         menu.classList.remove('active');
-        burger.classList.remove('active');
     }
 });
-
 document.getElementById("amount-one").addEventListener("input", function () {
     document.getElementById("amount-one").addEventListener("keyup", (event) => {
         if (event.target.value.split("")[0] == "." || event.target.value.split("")[0] == "-") {
