@@ -4,11 +4,9 @@ let selectedCurrencies = {
     from: "RUB",
     to: "USD"
 };
-
 const checkOnlineStatus = () => {
     return navigator.onLine;
 };
-
 const fetchRates = async (baseCurrency) => {
     if (!checkOnlineStatus()) {
         showOfflineNotification();
@@ -34,7 +32,6 @@ const fetchRates = async (baseCurrency) => {
         return null;
     }
 };
-
 const showOfflineNotification = () => {
     const notification = document.createElement("div");
     notification.classList.add("offline-notification");
@@ -42,14 +39,13 @@ const showOfflineNotification = () => {
     document.body.appendChild(notification);
     notification.style.visibility = 'visible';
     notification.style.opacity = 1;
-
     setTimeout(() => {
         notification.remove();
     }, 5000);
 };
-
 const updateExchangeRateDisplay = async () => {
     const { from, to } = selectedCurrencies;
+    if (from === to) return; 
     const data = await fetchRates(from);
     if (data && data.rates) {
         const exchangeRate = data.rates[to];
@@ -58,21 +54,18 @@ const updateExchangeRateDisplay = async () => {
         updateAmounts("amount-one", "amount-two", exchangeRate);
     }
 };
-
 const updateAmounts = (fromInputId, toInputId, rate) => {
     const amountFrom = parseFloat(document.getElementById(fromInputId).value) || 0;
     const convertedAmount = (amountFrom * rate).toFixed(2);
     document.getElementById(toInputId).value = convertedAmount > 0 ? convertedAmount : "";
 };
-
-// Устанавливаем значение 5000 в левое поле на старте
 const setInitialAmount = () => {
-    document.getElementById("amount-one").value = 5000;  // Устанавливаем 5000 в левое поле
+    document.getElementById("amount-one").value = 5000; 
 };
-
 const addEventListeners = () => {
     document.querySelectorAll(".currency1 button").forEach(button => {
         button.addEventListener("click", () => {
+            if (selectedCurrencies.from === button.textContent) return;
             document.querySelectorAll(".currency1 button").forEach(btn => btn.classList.remove("selected"));
             button.classList.add("selected");
             selectedCurrencies.from = button.textContent;
@@ -81,6 +74,7 @@ const addEventListeners = () => {
     });
     document.querySelectorAll(".currency2 button").forEach(button => {
         button.addEventListener("click", () => {
+            if (selectedCurrencies.to === button.textContent) return;
             document.querySelectorAll(".currency2 button").forEach(btn => btn.classList.remove("selected"));
             button.classList.add("selected");
             selectedCurrencies.to = button.textContent;
@@ -95,7 +89,6 @@ const addEventListeners = () => {
         const rate = parseFloat(document.querySelector(".rate2").textContent.split("=")[1]) || 1;
         updateAmounts("amount-two", "amount-one", rate);
     });
-
     const burger = document.querySelector('.burger');
     const menu = document.querySelector('.menu');
     burger.addEventListener('click', () => menu.classList.toggle('active'));
@@ -103,7 +96,6 @@ const addEventListeners = () => {
         if (!menu.contains(e.target) && !burger.contains(e.target)) menu.classList.remove('active');
     });
 };
-
 const init = () => {
     document.querySelector(".currency1 button.right-rub").classList.add("selected");
     document.querySelector(".currency2 button.left-usd").classList.add("selected");
