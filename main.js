@@ -1,134 +1,70 @@
-let cur1 = document.querySelectorAll(".currency1 button");
-let cur2 = document.querySelectorAll(".currency2 button");
-document.querySelector(".currency1 button.right-rub").classList.add("selected");
-document.querySelector(".currency2 button.left-usd").classList.add("selected");
-cur1.forEach(function (button) {
-    button.addEventListener("click", function () {
-        cur1.forEach(function (btn) {
-            btn.classList.remove("selected");
-        });
-        button.classList.add("selected");
-        updateRate2();
-    });
-});
-cur2.forEach(function (button) {
-    button.addEventListener("click", function () {
-        cur2.forEach(function (btn) {
-            btn.classList.remove("selected");
-        });
-        button.classList.add("selected");
-        updateRate();
-    });
-});
-const burger = document.querySelector('.burger');
-const menu = document.querySelector('.menu');
-burger.addEventListener('click', () => {
-    menu.classList.toggle('active');
-});
-document.addEventListener('click', (e) => {
-    if (!menu.contains(e.target) && !burger.contains(e.target)) {
-        menu.classList.remove('active');
+const apiUrl = "https://open.er-api.com/v6/latest";
+const apiKey = "f0876aa710d339af099cae5e3981e276";
+let selectedCurrencies = {
+    from: "RUB",
+    to: "USD"
+};
+const fetchRates = async (baseCurrency) => {
+    try {
+        const response = await fetch(`${apiUrl}/${baseCurrency}?apikey=${apiKey}`);
+        if (!response.ok) throw new Error("Failed to fetch exchange rates");
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching rates:", error);
+        return null;
     }
-});
-document.getElementById("amount-one").addEventListener("input", function () {
-    document.getElementById("amount-one").addEventListener("keyup", (event) => {
-        if (event.target.value.split("")[0] == "." || event.target.value.split("")[0] == "-") {
-            let arr = event.target.value.split("");
-            arr.shift();
-            event.target.value = Number(arr.join(""));
-            update(Number(event.target.value, "amount-two", ".currency2 button.selected", ".currency1 button.selected", ".rate"))
-        } else {
-            update("amount-one", "amount-two", ".currency2 button.selected", ".currency1 button.selected", ".rate");
-        };
-    })
-});
-document.getElementById("amount-two").addEventListener("input", function () {
-    document.getElementById("amount-two").addEventListener("keyup", (event) => {
-        if (event.target.value.split("")[0] == "." || event.target.value.split("")[0] == "-") {
-            let arr = event.target.value.split("");
-            arr.shift();
-            event.target.value = Number(arr.join(""));
-            update(Number(event.target.value, "amount-one", ".currency1 button.selected", ".currency2 button.selected", ".rate2"))
-        } else {
-            update("amount-two", "amount-one", ".currency1 button.selected", ".currency2 button.selected", ".rate2");
-
-        };
-    })
-});
-updateRate();
-function updateRate() {
-    let toCurrency = document.querySelector(".currency2 button.selected").textContent;
-    let fromCurrency = document.querySelector(".currency1 button.selected").textContent;
-    let apiKey = 'f0876aa710d339af099cae5e3981e276';
-    let apiUrl = `https://open.er-api.com/v6/latest/${fromCurrency}?apikey=${apiKey}`;
-    fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            let exchangeRate = data.rates[toCurrency];
-            let rateElement = document.querySelector(".rate");
-            let rateElement2 = document.querySelector(".rate2");
-            rateElement2.textContent = `1 ${toCurrency} = ${exchangeRate} ${fromCurrency}`;
-            rateElement.textContent = `1 ${fromCurrency} = ${exchangeRate} ${toCurrency}`;
-            update("amount-one", "amount-two", ".currency1 button.selected", ".currency2 button.selected", ".rate2");
-            update("amount-one", "amount-two", ".currency2 button.selected", ".currency1 button.selected", ".rate");
-        })
-        .catch(error => console.error("Error", error));
-}
-function update(fromInputId, toInputId, fromCurrencySelector, toCurrencySelector, rateElementSelector) {
-    let amountFrom = document.getElementById(fromInputId).value;
-    let toCurrency = document.querySelector(fromCurrencySelector).textContent;
-    let fromCurrency = document.querySelector(toCurrencySelector).textContent;
-    let apiKey = 'f0876aa710d339af099cae5e3981e276';
-    let apiUrl = `https://open.er-api.com/v6/latest/${fromCurrency}?apikey=${apiKey}`;
-    fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            let exchangeRate = data.rates[toCurrency];
-            let convertedAmount = (isNaN(amountFrom) ? 0 : amountFrom) * exchangeRate;
-            let toInputElement = document.getElementById(toInputId);
-            toInputElement.value = convertedAmount.toFixed(2); 
-            if (toInputElement.value == "0.00") {
-                toInputElement.value = '';
-            }
-            document.querySelector(rateElementSelector).textContent = `1 ${fromCurrency} = ${exchangeRate.toFixed(4)} ${toCurrency}`;
-        })
-        .catch(error => console.error("Error", error));
-}
-function updateRate2() {
-    let fromCurrency = document.querySelector(".currency2 button.selected").textContent;
-    let toCurrency = document.querySelector(".currency1 button.selected").textContent;
-    let apiKey = 'f0876aa710d339af099cae5e3981e276';
-    let apiUrl = `https://open.er-api.com/v6/latest/${fromCurrency}?apikey=${apiKey}`;
-    fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            let exchangeRate = data.rates[toCurrency];
-            let rateElement = document.querySelector(".rate");
-            let rateElement2 = document.querySelector(".rate2");
-            rateElement2.textContent = `1 ${toCurrency} = ${exchangeRate} ${fromCurrency}`;
-            rateElement.textContent = `1 ${fromCurrency} = ${exchangeRate} ${toCurrency}`;
-            update2("amount-two", "amount-one", ".currency1 button.selected", ".currency2 button.selected", ".rate");
-            update2("amount-two", "amount-one", ".currency2 button.selected", ".currency1 button.selected", ".rate2");
-        })
-        .catch(error => console.error("Error", error));
-}
-function update2(fromInputId, toInputId, fromCurrencySelector, toCurrencySelector, rateElementSelector) {
-    let amountFrom = document.getElementById(fromInputId).value;
-    let fromCurrency = document.querySelector(fromCurrencySelector).textContent;
-    let toCurrency = document.querySelector(toCurrencySelector).textContent;
-    let apiKey = 'f0876aa710d339af099cae5e3981e276';
-    let apiUrl = `https://open.er-api.com/v6/latest/${fromCurrency}?apikey=${apiKey}`;
-    fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            let exchangeRate = data.rates[toCurrency];
-            let convertedAmount = (isNaN(amountFrom) ? 0 : amountFrom) * exchangeRate;
-            let toInputElement = document.getElementById(toInputId);
-            toInputElement.value = convertedAmount.toFixed(2); 
-            if (toInputElement.value == "0.00") {
-                toInputElement.value = '';
-            }
-            document.querySelector(rateElementSelector).textContent = `1 ${fromCurrency} = ${exchangeRate.toFixed(4)} ${toCurrency}`;
-        })
-        .catch(error => console.error("Error", error));
-}
+};
+const updateExchangeRateDisplay = async () => {
+    const { from, to } = selectedCurrencies;
+    const data = await fetchRates(from);
+    if (data && data.rates) {
+        const exchangeRate = data.rates[to];
+        document.querySelector(".rate").textContent = `1 ${from} = ${exchangeRate.toFixed(4)} ${to}`;
+        document.querySelector(".rate2").textContent = `1 ${to} = ${(1 / exchangeRate).toFixed(4)} ${from}`;
+        updateAmounts("amount-one", "amount-two", exchangeRate);
+    }
+};
+const updateAmounts = (fromInputId, toInputId, rate) => {
+    const amountFrom = parseFloat(document.getElementById(fromInputId).value) || 0;
+    const convertedAmount = (amountFrom * rate).toFixed(2);
+    document.getElementById(toInputId).value = convertedAmount > 0 ? convertedAmount : "";
+};
+const addEventListeners = () => {
+    document.querySelectorAll(".currency1 button").forEach(button => {
+        button.addEventListener("click", () => {
+            document.querySelectorAll(".currency1 button").forEach(btn => btn.classList.remove("selected"));
+            button.classList.add("selected");
+            selectedCurrencies.from = button.textContent;
+            updateExchangeRateDisplay();
+        });
+    });
+    document.querySelectorAll(".currency2 button").forEach(button => {
+        button.addEventListener("click", () => {
+            document.querySelectorAll(".currency2 button").forEach(btn => btn.classList.remove("selected"));
+            button.classList.add("selected");
+            selectedCurrencies.to = button.textContent;
+            updateExchangeRateDisplay();
+        });
+    });
+    document.getElementById("amount-one").addEventListener("input", () => {
+        const rate = parseFloat(document.querySelector(".rate").textContent.split("=")[1]) || 1;
+        updateAmounts("amount-one", "amount-two", rate);
+    });
+    document.getElementById("amount-two").addEventListener("input", () => {
+        const rate = parseFloat(document.querySelector(".rate2").textContent.split("=")[1]) || 1;
+        updateAmounts("amount-two", "amount-one", rate);
+    });
+    const burger = document.querySelector('.burger');
+    const menu = document.querySelector('.menu');
+    burger.addEventListener('click', () => menu.classList.toggle('active'));
+    document.addEventListener('click', (e) => {
+        if (!menu.contains(e.target) && !burger.contains(e.target)) menu.classList.remove('active');
+    });
+};
+const init = () => {
+    document.querySelector(".currency1 button.right-rub").classList.add("selected");
+    document.querySelector(".currency2 button.left-usd").classList.add("selected");
+    updateExchangeRateDisplay();
+    addEventListeners();
+};
+init();
